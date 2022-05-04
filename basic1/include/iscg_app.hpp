@@ -1,3 +1,7 @@
+#pragma once
+
+#include <drag_manager.hpp>
+
 // hnll
 #include <hge_game.hpp>
 
@@ -13,6 +17,8 @@ class IscgApp : public hnll::HgeGame
     }
   private:
     void createActor() override;
+    
+    u_ptr<hnll::HgeActor> dragManager_;
 };
 
 } // namespace iscg
