@@ -1,3 +1,4 @@
+// hge
 #include <hge_component.hpp>
 
 // lib
@@ -6,23 +7,25 @@
 
 namespace hnll {
 
-class DraggableComponent : HgeComponent
+class DraggableComponent : public HgeComponent
 {
   public:
     DraggableComponent(GLFWwindow* window);
 
+  private:
     void updateComponent(float dt) override;
 
-  private:
     bool intersectsWithClickProjection();
     void moveToClickProjection();
 
     // controll mouse-point binding
     static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
-    glm::vec3 position_;
     GLFWwindow* window_;
     bool bindedToMouse_ = false;
     static bool isDragging_;
+
+    glm::vec3 position_;
+    float radius = 0.3;
 };
 
 } // namespace hnll

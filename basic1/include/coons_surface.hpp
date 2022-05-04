@@ -7,7 +7,7 @@ namespace hnll {
 class CoonsSurface
 {
 public:
-  CoonsSurface();
+  CoonsSurface() {}
 
 };
 

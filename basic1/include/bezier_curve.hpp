@@ -7,7 +7,7 @@ namespace hnll {
 class BezierCurve : public HgeActor
 {
 public:
-  BezierCurve();
+  BezierCurve() : HgeActor() {}
 
 private:
   int controllPointCount_;
