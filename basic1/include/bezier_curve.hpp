@@ -35,18 +35,23 @@ class BezierCurve : public hnll::HgeActor
     void clearMidControllPoint()
     { midControllPoints_.clear(); }
 
+    void recreateCurve(int dividingCount);
+    
+    // getter
+    static int getControllPointCount() { return controllPointCount_; }
+
   private:
     void updateActor(float dt) override {}
-    void createControllPoint();
 
     // TODO : bind to imgui
-    int controllPointCount_ = 4;
+    static int controllPointCount_;
     // share head and tail with other curves
     s_ptr<ControllPoint> head_;
     s_ptr<ControllPoint> tail_;
     // other than head and tail
     std::vector<s_ptr<ControllPoint>> midControllPoints_;
-
+    // position of the curve point
+    std::vector<glm::vec3> positions_;
 };
 
 } // namespace hnll

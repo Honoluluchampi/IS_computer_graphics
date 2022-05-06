@@ -36,18 +36,30 @@ CoonsSurface::CoonsSurface(IscgApp& iscgApp) : HgeActor(), iscgApp_(iscgApp)
 
   // create each mid points and move them to bezier curve
   createMidControllPoints();
+
+  // first mesh
+  recreateSurfaceMesh();
 }
 
-void CoonsSurface::createMidControllPoints(int pointCount)
+void CoonsSurface::updateSurface()
 {
+  dragManager_->update(0.f);
+  if (dragManager_->isChanged())
+    recreateSurfaceMesh();
+}
+
+void CoonsSurface::createMidControllPoints()
+{
+  auto controllPointCount = BezierCurve::getControllPointCount();
+
   for (int i = 0; i < 4; i++) {
     // create from scratch
     bezierCurves_[i]->clearMidControllPoint();
-    auto head2tail = basePoints_[(i + 1) % pointCount]->getTranslation() - basePoints_[i]->getTranslation();
-    for (int j = 0; j < pointCount - 1; j++) {
+    auto head2tail = basePoints_[(i + 1) % controllPointCount]->getTranslation() - basePoints_[i]->getTranslation();
+    for (int j = 0; j < controllPointCount - 1; j++) {
       // calc vec the head to the new
       auto diff = head2tail;
-      diff *= (j + 1) * (1.f / (pointCount - 1));
+      diff *= (j + 1) * (1.f / (controllPointCount - 1));
 
       auto controllPoint = std::make_shared<ControllPoint>(basePoints_[i]->getTranslation() + diff, pointColor_, pointRadius_);
       addControllPoint(controllPoint);
@@ -61,6 +73,20 @@ void CoonsSurface::addControllPoint(s_ptr<ControllPoint>& controllPoint)
 {
   iscgApp_.addPointLightWithoutOwner(controllPoint->lightComp());
   dragManager_->addDragComps(controllPoint->dragComp());
+}
+
+void CoonsSurface::recreateSurfaceMesh()
+{
+  // calc 4 edges first (bezier curves)
+  for (auto& bezierCurve : bezierCurves_)
+    bezierCurve->recreateCurve(dividingCount_);
+
+  auto controllPointCount = BezierCurve::getControllPointCount();
+
+  glm::vec3 positions[(dividingCount_ + 1) * (controllPointCount - 1) + 1][(dividingCount_ + 1) * (controllPointCount - 1) + 1];
+
+  // calc 4 edges first (bezier curves)
+
 }
 
 } // namespace iscg

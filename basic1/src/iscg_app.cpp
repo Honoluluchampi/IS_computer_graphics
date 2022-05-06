@@ -24,7 +24,7 @@ void IscgApp::createActor()
 
 void IscgApp::updateGame(float dt)
 {
-  coonsSurface_->updateDragManager();
+  coonsSurface_->updateSurface();
 }
 
 } // namespace iscg
