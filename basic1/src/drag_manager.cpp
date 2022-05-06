@@ -65,6 +65,7 @@ float onTheLineJudge(glm::vec2& a, glm::vec2& b, float buffer)
 void DragManager::calcCursorProjectionIntersect()
 {
   glm::vec2 clickPoint = calcRawClickPoint();
+  isChanged_ = false;
 
   if (!isBinded_) {
     float maxPriority = -1;
@@ -99,9 +100,13 @@ void DragManager::calcCursorProjectionIntersect()
     glm::vec3  cameraCompPoint = calcWorldClickPoint(clickPoint);
     auto projVec = cameraCompPoint - camera_.getTransform().translation_m;
     projVec *= cameraOriginatedCompZ_ / hnll::ViewerComponent::getNearDistance();
-    dragCompMap_[bindedCompId_]->getTransform().translation_m = 
-      // view->getInverseViewYXZ() *
-      camera_.getTransform().translation_m + projVec;
+    auto newPos = camera_.getTransform().translation_m + projVec;
+
+    if (newPos != dragCompMap_[bindedCompId_]->getTransform().translation_m) {
+      dragCompMap_[bindedCompId_]->getTransform().translation_m = 
+        camera_.getTransform().translation_m + projVec;
+      isChanged_ = true;
+    }
   }
 }
 

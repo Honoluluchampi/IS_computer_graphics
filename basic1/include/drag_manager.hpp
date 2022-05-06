@@ -28,6 +28,8 @@ class DragManager : public hnll::HgeActor
       dragCompMap_.emplace(id, std::forward<SP>(spDragComp)); 
     }
 
+    inline bool isChanged() const { return isChanged_; }
+
   private:
     void updateActor(float dt) override;
 
@@ -43,6 +45,7 @@ class DragManager : public hnll::HgeActor
     GLFWwindow* window_;
     static bool isDragging_;
     static bool isBinded_;
+    bool isChanged_ = false;
     // -1 : no comp is binded
     hnll::HgeComponent::id_t bindedCompId_ = -1;
     // for calculation of new comp pos
