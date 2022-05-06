@@ -23,20 +23,17 @@ class DragManager;
 class DraggableComponent : public hnll::HgeComponent
 {
   public:
-    DraggableComponent(DragManager& owner, Transform& transform);
+    DraggableComponent(Transform& transform) : transform_(transform)
+    {}
+
+    Transform& getTransform()
+    { return transform_; }
+    float getRadius() { return radius_; }
 
   private:
-    void updateComponent(float dt) override;
-
-    void moveToClickProjection();
-
     bool isBindedToMouse_ = false;
-
     Transform& transform_;
-    float radius = 0.3;
-
-    // temporal
-    DragManager& owner_;
+    float radius_ = 0.04;
 };
 
 } // namespace hnll

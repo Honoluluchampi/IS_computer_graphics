@@ -15,6 +15,9 @@ class IscgApp : public hnll::HgeGame
     {
       createActor();
     }
+    
+    void addDragComp(u_ptr<hnll::HgeActor>& owner, s_ptr<DraggableComponent>& dragComp);
+
   private:
     void createActor() override;
     

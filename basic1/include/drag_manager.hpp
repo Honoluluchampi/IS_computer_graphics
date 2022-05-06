@@ -4,6 +4,7 @@
 
 // hge
 #include <hge_actor.hpp>
+#include <hge_actors/hge_default_camera.hpp>
 
 // lib
 #include <GLFW/glfw3.h>
@@ -18,7 +19,7 @@ class DragManager : public hnll::HgeActor
   using map = std::unordered_map<hnll::HgeComponent::id_t, s_ptr<DraggableComponent>>;
   
   public:
-    DragManager(GLFWwindow* window);
+    DragManager(GLFWwindow* window, hnll::HgeCamera& camera);
 
     // complete transport
     template <class SP> void addDragComps(SP&& spDragComp)
@@ -31,6 +32,7 @@ class DragManager : public hnll::HgeActor
     void updateActor(float dt) override;
 
     void calcCursorProjectionIntersect();
+    glm::vec2 calcRawClickPoint();
 
     // controll mouse-point binding
     static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
@@ -39,8 +41,12 @@ class DragManager : public hnll::HgeActor
 
     GLFWwindow* window_;
     static bool isDragging_;
+    static bool isBinded_;
     // -1 : no comp is binded
     hnll::HgeComponent::id_t bindedCompId_ = -1;
+    // for calculation of new comp pos
+    float cameraOriginatedCompZ_;
+    hnll::HgeCamera& camera_;
 };
 
 } // namespace iscg
