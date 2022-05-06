@@ -7,21 +7,34 @@
 namespace iscg {
 void IscgApp::createActor()
 {
-  auto actor = std::make_unique<hnll::HgeActor>();
-  auto lightComp = hnll::PointLightComponent::createPointLight(actor->getId(), 0.0f, 0.05f, glm::vec3{.1f, .1f, 1.f});
-  auto dragComp = std::make_shared<DraggableComponent>(lightComp->getTransform());
-  addPointLight(actor, lightComp);
-  addDragComp(actor, dragComp);
-  addActor(actor);
-  addActor(dragManager_);
+  // init drag manager
+  dragManager_ = std::make_unique<DragManager>(glfwWindow_m, *upCamera_m);
+  
+  // create 4 controll points
+  glm::vec3 positions[4] = {
+    {1.f, 0.f, 1.f},
+    {1.f, 0.f, -1.f},
+    {-1.f, 0.f, 1.f},
+    {-1.f, 0.f, -1.f}
+  };
+
+  glm::vec3 color = {.1f, 1.f, 1.f};
+
+  for (int i = 0; i < 4; i++) {
+    auto controllPoint = std::make_shared<ControllPoint>(positions[i], color, 0.05f);
+    addControllPoint(controllPoint);
+  }
 }
 
-// TODO : multiple dragcomp
-void IscgApp::addDragComp(u_ptr<hnll::HgeActor>& owner, s_ptr<DraggableComponent>& dragComp)
+void IscgApp::addControllPoint(s_ptr<ControllPoint>& controllPoint)
 {
-  auto dragManager = std::make_unique<DragManager>(glfwWindow_m, *upCamera_m);
-  owner->addSharedComponent(dragComp);
-  dragManager->addDragComps(dragComp);
-  dragManager_ = std::move(dragManager);
+  addPointLightWithoutOwner(controllPoint->lightComp());
+  dragManager_->addDragComps(controllPoint->dragComp());
 }
+
+void IscgApp::updateGame(float dt)
+{
+  dragManager_->update(dt);
+}
+
 } // namespace iscg

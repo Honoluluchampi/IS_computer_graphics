@@ -1,6 +1,7 @@
 #pragma once
 
 #include <drag_manager.hpp>
+#include <bezier_curve.hpp>
 
 // hnll
 #include <hge_game.hpp>
@@ -16,12 +17,13 @@ class IscgApp : public hnll::HgeGame
       createActor();
     }
     
-    void addDragComp(u_ptr<hnll::HgeActor>& owner, s_ptr<DraggableComponent>& dragComp);
-
-  private:
-    void createActor() override;
+    void addControllPoint(s_ptr<ControllPoint>& controllPoint);
     
-    u_ptr<hnll::HgeActor> dragManager_;
+  private:
+    void updateGame(float dt) override;
+    void createActor() override;
+
+    u_ptr<DragManager> dragManager_;
 };
 
 } // namespace iscg
