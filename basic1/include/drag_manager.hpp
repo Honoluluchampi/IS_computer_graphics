@@ -33,6 +33,7 @@ class DragManager : public hnll::HgeActor
 
     void calcCursorProjectionIntersect();
     glm::vec2 calcRawClickPoint();
+    glm::vec3 calcWorldClickPoint(const glm::vec2& clickPoint);
 
     // controll mouse-point binding
     static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);

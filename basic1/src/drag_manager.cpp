@@ -64,7 +64,7 @@ float onTheLineJudge(glm::vec2& a, glm::vec2& b, float buffer)
 
 void DragManager::calcCursorProjectionIntersect()
 {
-  glm::vec2 realClickPoint = calcRawClickPoint();
+  glm::vec2 clickPoint = calcRawClickPoint();
 
   if (!isBinded_) {
     float maxPriority = -1;
@@ -82,7 +82,7 @@ void DragManager::calcCursorProjectionIntersect()
       float buffer = comp->getRadius() / cameraOriginatedComp.z * 2;
       
       // relaxation
-      auto priority = onTheLineJudge(realClickPoint, compPos, buffer);
+      auto priority = onTheLineJudge(clickPoint, compPos, buffer);
       if (priority == -1) continue;
       if (maxPriority == -1 || priority > maxPriority) {
         maxPriority = priority;
@@ -93,14 +93,26 @@ void DragManager::calcCursorProjectionIntersect()
     if (maxPriority != -1) isBinded_ = true;
   }
   if (isBinded_) {
+    // TODO : calc new position correctly
     auto view = camera_.viewerComponent();
     auto z = dragCompMap_[bindedCompId_]->getTransform().translation_m.z;
-    glm::vec3 newPos = 
-      view->getInverseViewYXZ() *  
-      view->getInversePerspectiveProjection() *
-      glm::vec4(realClickPoint, 1, 1.f);
-    dragCompMap_[bindedCompId_]->getTransform().translation_m = newPos;
+    glm::vec3  cameraCompPoint = calcWorldClickPoint(clickPoint);
+    auto projVec = cameraCompPoint - camera_.getTransform().translation_m;
+    projVec *= cameraOriginatedCompZ_ / hnll::ViewerComponent::getNearDistance();
+    dragCompMap_[bindedCompId_]->getTransform().translation_m = 
+      // view->getInverseViewYXZ() *
+      camera_.getTransform().translation_m + projVec;
   }
+}
+
+glm::vec3 DragManager::calcWorldClickPoint(const glm::vec2& clickPoint)
+{
+  auto near = hnll::ViewerComponent::getNearDistance();
+  auto worldWidth = near * std::tan(hnll::ViewerComponent::getFovy());
+  int w, h; glfwGetWindowSize(window_, &w, &h);
+  auto worldHeight = worldWidth * ((float)h / (float)w);
+
+  return camera_.getTransform().mat4() * glm::vec4(clickPoint.x * worldWidth, clickPoint.y * worldHeight, near, 1);
 }
 
 } // namespace iscg
