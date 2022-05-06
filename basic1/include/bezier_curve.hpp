@@ -28,8 +28,16 @@ class BezierCurve : public hnll::HgeActor
     // takes head and tail (create them before call this ctor)
     BezierCurve(s_ptr<ControllPoint>& head, s_ptr<ControllPoint>& tail);
 
+    template<class CP>
+    void addMidControllPoint(CP&& cp)
+    { midControllPoints_.emplace_back(std::forward<CP>(cp)); }
+
+    void clearMidControllPoint()
+    { midControllPoints_.clear(); }
+
   private:
     void updateActor(float dt) override {}
+    void createControllPoint();
 
     // TODO : bind to imgui
     int controllPointCount_ = 4;
@@ -38,6 +46,7 @@ class BezierCurve : public hnll::HgeActor
     s_ptr<ControllPoint> tail_;
     // other than head and tail
     std::vector<s_ptr<ControllPoint>> midControllPoints_;
+
 };
 
 } // namespace hnll

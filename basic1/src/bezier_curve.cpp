@@ -19,4 +19,9 @@ BezierCurve::BezierCurve(s_ptr<ControllPoint>& head, s_ptr<ControllPoint>& tail)
   }
 }
 
+void BezierCurve::createControllPoint()
+{
+  
+}
+
 } // namespace iscg
