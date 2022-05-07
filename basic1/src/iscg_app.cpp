@@ -19,6 +19,13 @@ IscgApp::IscgApp() : HgeGame("coons surface")
 
 void IscgApp::createActor()
 {
+  // create light
+  auto light = std::make_unique<hnll::HgeActor>();
+  auto lightComp = hnll::PointLightComponent::createPointLight
+    (light->getId(), 100.f, 0.f, {.1f, 1.f, 1.f});
+  lightComp->setTranslation(glm::vec3(0.f, -10.f, 0.f));
+  addPointLight(light, lightComp);
+
   coonsSurface_ = std::make_unique<CoonsSurface>(*this);
 }
 

@@ -2,10 +2,13 @@
 
 #include <bezier_curve.hpp>
 #include <drag_manager.hpp>
+
+// hve
 #include <hve_model.hpp>
 
 // hge
 #include <hge_actor.hpp>
+#include <hge_components/model_component.hpp>
 
 namespace iscg {
 
@@ -38,7 +41,10 @@ class CoonsSurface : hnll::HgeActor
     // number of vertices between two controll point
     int dividingCount_ = 6;
 
-    u_ptr<hnll::HveModel> surfaceMesh_;
+    glm::vec3 surfaceColor_ = {1.f, 1.f, 1.f};
+
+    s_ptr<hnll::HveModel> surfaceMesh_;
+    bool hasModel_ = false;
 };
 
 } // namespace

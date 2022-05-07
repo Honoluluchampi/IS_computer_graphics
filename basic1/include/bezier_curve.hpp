@@ -39,6 +39,8 @@ class BezierCurve : public hnll::HgeActor
     
     // getter
     static int getControllPointCount() { return controllPointCount_; }
+    std::vector<glm::vec3>& getLinePointPositions()
+    { return positions_; }
 
   private:
     void updateActor(float dt) override {}
