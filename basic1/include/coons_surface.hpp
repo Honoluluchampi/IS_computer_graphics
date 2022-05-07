@@ -36,10 +36,10 @@ class CoonsSurface : hnll::HgeActor
 
     // point param
     glm::vec3 pointColor_ = {1.f, .1f, .1f};
-    float pointRadius_ = 0.05f;
+    float pointRadius_ = 0.2f;
 
     // number of vertices between two controll point
-    int dividingCount_ = 6;
+    int dividingCount_ = 15;
 
     glm::vec3 surfaceColor_ = {1.f, 1.f, 1.f};
 

@@ -6,7 +6,7 @@ ControllPoint::ControllPoint(const glm::vec3& position, const glm::vec3& color, 
 {
   lightComp_ = hnll::PointLightComponent::createPointLight(this->getId(), 0.0f, radius, color);
   lightComp_->getTransform().translation_m = position;
-  dragComp_ = std::make_shared<DraggableComponent>(lightComp_->getTransform());
+  dragComp_ = std::make_shared<DraggableComponent>(lightComp_->getTransform(), radius);
 }
 
 int BezierCurve::controllPointCount_ = 4;
@@ -15,10 +15,6 @@ int BezierCurve::controllPointCount_ = 4;
 BezierCurve::BezierCurve(s_ptr<ControllPoint>& head, s_ptr<ControllPoint>& tail) 
   : HgeActor(), head_(head), tail_(tail)
 {
-  auto head2tail = tail_->getTranslation() - head_->getTranslation();
-  for (int i = 0; i < controllPointCount_ - 2; i++) {
-
-  }
 }
 
 // TODO : use cache of unchaged curve
@@ -41,7 +37,7 @@ void BezierCurve::recreateCurve(int dividingCount)
     auto trib3 = midControllPoints_[1]->getTranslation();
     trib3 *= 3 * std::pow(t, 2) * ti;
     auto trib4 = tailPos;
-    trib4 *= std::pow(ti, 3);
+    trib4 *= std::pow(t, 3);
 
     positions_[i] = trib1 + trib2 + trib3 + trib4;
   }

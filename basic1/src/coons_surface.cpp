@@ -69,14 +69,16 @@ void CoonsSurface::createMidControllPoints()
 {
   auto controllPointCount = BezierCurve::getControllPointCount();
 
+  // bezier curve loop
   for (int i = 0; i < 4; i++) {
     // create from scratch
     bezierCurves_[i]->clearMidControllPoint();
     auto head2tail = basePoints_[(i + 1) % controllPointCount]->getTranslation() - basePoints_[i]->getTranslation();
-    for (int j = 0; j < controllPointCount - 1; j++) {
+    // mid-controll point loop
+    for (int j = 1; j < controllPointCount - 1; j++) {
       // calc vec the head to the new
       auto diff = head2tail;
-      diff *= (j + 1) * (1.f / (controllPointCount - 1));
+      diff *= j * (1.f / (controllPointCount - 1));
 
       auto controllPoint = std::make_shared<ControllPoint>(basePoints_[i]->getTranslation() + diff, pointColor_, pointRadius_);
       addControllPoint(controllPoint);
@@ -145,7 +147,7 @@ void CoonsSurface::recreateSurfaceMesh()
       glm::vec3 b = sclXvec(si * ti, positions[0][0]) + sclXvec(s * ti, positions[0][linePointCount - 1])
         + sclXvec(si * t, positions[linePointCount - 1][0]) + sclXvec(s * t, positions[linePointCount - 1][linePointCount - 1]);
       positions[i][j] = lc + ld + b;
-
+      positions[i][j] /= 3.f;
       // register two triangle to buffer
       // uppder triangle
       glm::vec3 normal = glm::cross(positions[i][j-1] - positions[i-1][j-1], positions[i-1][j] - positions[i-1][j-1]); 
@@ -188,14 +190,17 @@ void CoonsSurface::recreateSurfaceMesh()
   // recreate model comp
   auto hveSurface = std::make_shared<hnll::HveModel>(iscgApp_.hveDevice(), builder);
   // TODO : configure modelComponent::id_m
-  auto modelComp = std::make_shared<hnll::ModelComponent>(0, std::move(hveSurface));
+  auto modelComp = std::make_shared<hnll::ModelComponent>(getId(), std::move(hveSurface));
   
-  if (hasModel_) replaceRenderableComponent(modelComp);
+  if (hasModel_) {
+    replaceRenderableComponent(modelComp);
+    iscgApp_.replaceRenderableComponent(modelComp);
+  }
   else {
     addRenderableComponent(modelComp);
+    iscgApp_.addRenderableComponent(modelComp);
     hasModel_ = true;
   }
-  iscgApp_.addRenderableComponent(modelComp);
 }
 
 } // namespace iscg

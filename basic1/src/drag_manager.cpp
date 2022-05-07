@@ -113,7 +113,7 @@ void DragManager::calcCursorProjectionIntersect()
 glm::vec3 DragManager::calcWorldClickPoint(const glm::vec2& clickPoint)
 {
   auto near = hnll::ViewerComponent::getNearDistance();
-  auto worldWidth = near * std::tan(hnll::ViewerComponent::getFovy());
+  auto worldWidth = near * std::tan(hnll::ViewerComponent::getFovy() / 2);
   int w, h; glfwGetWindowSize(window_, &w, &h);
   auto worldHeight = worldWidth * ((float)h / (float)w);
 

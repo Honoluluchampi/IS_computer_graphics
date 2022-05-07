@@ -23,8 +23,8 @@ class DragManager;
 class DraggableComponent : public hnll::HgeComponent
 {
   public:
-    DraggableComponent(Transform& transform) : transform_(transform)
-    {}
+    DraggableComponent(Transform& transform, float radius) 
+      : transform_(transform), radius_(radius){}
 
     Transform& getTransform()
     { return transform_; }
@@ -33,7 +33,7 @@ class DraggableComponent : public hnll::HgeComponent
   private:
     bool isBindedToMouse_ = false;
     Transform& transform_;
-    float radius_ = 0.04;
+    float radius_;
 };
 
 } // namespace hnll
