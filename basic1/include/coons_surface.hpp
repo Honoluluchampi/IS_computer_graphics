@@ -24,7 +24,7 @@ class CoonsSurface : hnll::HgeActor
 
   private:  
     // create each mid points and move them to bezier curve
-    void createMidControllPoints();
+    void recreateMidControllPoints();
     void addControllPoint(s_ptr<ControllPoint>& controllPoint);
     void recreateSurfaceMesh();
 
@@ -34,16 +34,16 @@ class CoonsSurface : hnll::HgeActor
     std::vector<u_ptr<BezierCurve>> bezierCurves_;
     std::vector<s_ptr<ControllPoint>> basePoints_;
 
+    // to check wheather those param was changed
+    int controllPointCountCache_ = -1;
+    int dividingCountCache_ = -1;
     // point param
     glm::vec3 pointColor_ = {1.f, .1f, .1f};
     float pointRadius_ = 0.2f;
 
-    // number of vertices between two controll point
-    int dividingCount_ = 15;
-
     glm::vec3 surfaceColor_ = {1.f, 1.f, 1.f};
 
-    s_ptr<hnll::HveModel> surfaceMesh_;
+    s_ptr<hnll::ModelComponent> modelComp_;
     bool hasModel_ = false;
 };
 

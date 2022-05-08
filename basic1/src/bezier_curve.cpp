@@ -10,6 +10,7 @@ ControllPoint::ControllPoint(const glm::vec3& position, const glm::vec3& color, 
 }
 
 int BezierCurve::controllPointCount_ = 4;
+int BezierCurve::dividingCount_ = 15;
 
 // copy s_ptr to head_ and tail_
 BezierCurve::BezierCurve(s_ptr<ControllPoint>& head, s_ptr<ControllPoint>& tail) 
@@ -18,9 +19,9 @@ BezierCurve::BezierCurve(s_ptr<ControllPoint>& head, s_ptr<ControllPoint>& tail)
 }
 
 // TODO : use cache of unchaged curve
-void BezierCurve::recreateCurve(int dividingCount)
+void BezierCurve::recreateCurve()
 {
-  positions_.resize((dividingCount + 1) * (controllPointCount_ - 1) + 1);
+  positions_.resize((dividingCount_ + 1) * (controllPointCount_ - 1) + 1);
 
   auto headPos = head_->getTranslation(), tailPos = tail_->getTranslation();
   positions_[0] = headPos;

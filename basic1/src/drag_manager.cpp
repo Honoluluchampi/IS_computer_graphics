@@ -32,6 +32,7 @@ void DragManager::mouseButtonCallback(GLFWwindow* window, int button, int action
 
 void DragManager::updateActor(float dt)
 {
+  isChanged_ = false;
   if (!isDragging_) return ;
 
   calcCursorProjectionIntersect();
@@ -65,7 +66,6 @@ float onTheLineJudge(glm::vec2& a, glm::vec2& b, float buffer)
 void DragManager::calcCursorProjectionIntersect()
 {
   glm::vec2 clickPoint = calcRawClickPoint();
-  isChanged_ = false;
 
   if (!isBinded_) {
     float maxPriority = -1;
@@ -113,7 +113,7 @@ void DragManager::calcCursorProjectionIntersect()
 glm::vec3 DragManager::calcWorldClickPoint(const glm::vec2& clickPoint)
 {
   auto near = hnll::ViewerComponent::getNearDistance();
-  auto worldWidth = near * std::tan(hnll::ViewerComponent::getFovy() / 2);
+  auto worldWidth = near * std::tan(hnll::ViewerComponent::getFovy() / 1.58f);
   int w, h; glfwGetWindowSize(window_, &w, &h);
   auto worldHeight = worldWidth * ((float)h / (float)w);
 

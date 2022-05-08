@@ -16,7 +16,7 @@ namespace iscg {
 
 class DragManager : public hnll::HgeActor
 {
-  using map = std::unordered_map<hnll::HgeComponent::id_t, s_ptr<DraggableComponent>>;
+  using map = std::unordered_map<hnll::HgeComponent::compId, s_ptr<DraggableComponent>>;
   
   public:
     DragManager(GLFWwindow* window, hnll::HgeCamera& camera);
@@ -24,7 +24,7 @@ class DragManager : public hnll::HgeActor
     // complete transport
     template <class SP> void addDragComps(SP&& spDragComp)
     { 
-      hnll::HgeComponent::id_t id = spDragComp->getCompId();
+      hnll::HgeComponent::compId id = spDragComp->getCompId();
       dragCompMap_.emplace(id, std::forward<SP>(spDragComp)); 
     }
 
@@ -47,7 +47,7 @@ class DragManager : public hnll::HgeActor
     static bool isBinded_;
     bool isChanged_ = false;
     // -1 : no comp is binded
-    hnll::HgeComponent::id_t bindedCompId_ = -1;
+    hnll::HgeComponent::compId bindedCompId_ = -1;
     // for calculation of new comp pos
     float cameraOriginatedCompZ_;
     hnll::HgeCamera& camera_;

@@ -35,18 +35,20 @@ class BezierCurve : public hnll::HgeActor
     void clearMidControllPoint()
     { midControllPoints_.clear(); }
 
-    void recreateCurve(int dividingCount);
+    void recreateCurve();
     
     // getter
     static int getControllPointCount() { return controllPointCount_; }
-    std::vector<glm::vec3>& getLinePointPositions()
-    { return positions_; }
+    static int getDividingCount() { return dividingCount_; }
+    std::vector<glm::vec3>& getLinePointPositions() { return positions_; }
 
   private:
     void updateActor(float dt) override {}
 
     // TODO : bind to imgui
     static int controllPointCount_;
+    static int dividingCount_;
+
     // share head and tail with other curves
     s_ptr<ControllPoint> head_;
     s_ptr<ControllPoint> tail_;

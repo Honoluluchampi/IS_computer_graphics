@@ -52,7 +52,7 @@ CoonsSurface::CoonsSurface(IscgApp& iscgApp) : HgeActor(), iscgApp_(iscgApp)
   }
 
   // create each mid points and move them to bezier curve
-  createMidControllPoints();
+  recreateMidControllPoints();
 
   // first mesh
   recreateSurfaceMesh();
@@ -61,11 +61,18 @@ CoonsSurface::CoonsSurface(IscgApp& iscgApp) : HgeActor(), iscgApp_(iscgApp)
 void CoonsSurface::updateSurface()
 {
   dragManager_->update(0.f);
-  if (dragManager_->isChanged())
+
+  if (controllPointCountCache_ != BezierCurve::getControllPointCount()) {
+    recreateMidControllPoints();
+  }
+
+  if (dragManager_->isChanged()) 
+    recreateSurfaceMesh();
+  if (dividingCountCache_ != BezierCurve::getDividingCount())
     recreateSurfaceMesh();
 }
 
-void CoonsSurface::createMidControllPoints()
+void CoonsSurface::recreateMidControllPoints()
 {
   auto controllPointCount = BezierCurve::getControllPointCount();
 
@@ -86,6 +93,9 @@ void CoonsSurface::createMidControllPoints()
       bezierCurves_[i]->addMidControllPoint(controllPoint);
     }
   } 
+
+  // cache 
+  controllPointCountCache_ = BezierCurve::getControllPointCount();
 }
 
 void CoonsSurface::addControllPoint(s_ptr<ControllPoint>& controllPoint)
@@ -104,13 +114,14 @@ glm::vec3 sclXvec(const float& scalar, const glm::vec3& vec)
 void CoonsSurface::recreateSurfaceMesh()
 {
   auto controllPointCount = BezierCurve::getControllPointCount();
-  int linePointCount = (dividingCount_ + 1) * (controllPointCount - 1) + 1;
+  auto dividingCount = BezierCurve::getDividingCount();
+  int linePointCount = (dividingCount + 1) * (controllPointCount - 1) + 1;
   glm::vec3 positions[linePointCount][linePointCount];
   
   // calc 4 edges first (bezier curves)
   for (auto& bezierCurve : bezierCurves_)
-    bezierCurve->recreateCurve(dividingCount_);
-  // get caluculated positions
+      bezierCurve->recreateCurve();
+  // get caluculated bezier curves
   // 1 2
   // 4 3
   auto& bezierLinePositions = bezierCurves_[0]->getLinePointPositions();
@@ -149,7 +160,7 @@ void CoonsSurface::recreateSurfaceMesh()
       positions[i][j] = lc + ld + b;
       positions[i][j] /= 3.f;
       // register two triangle to buffer
-      // uppder triangle
+      // upper triangle
       glm::vec3 normal = glm::cross(positions[i][j-1] - positions[i-1][j-1], positions[i-1][j] - positions[i-1][j-1]); 
       hnll::HveModel::Vertex vertex[3] = {};
       // record three vertex
@@ -185,20 +196,20 @@ void CoonsSurface::recreateSurfaceMesh()
         builder.indices_m.push_back(uniqueVertices[vert]);
       }
     }
+
+    dividingCountCache_ = BezierCurve::getDividingCount();
   }
 
   // recreate model comp
   auto hveSurface = std::make_shared<hnll::HveModel>(iscgApp_.hveDevice(), builder);
-  // TODO : configure modelComponent::id_m
-  auto modelComp = std::make_shared<hnll::ModelComponent>(getId(), std::move(hveSurface));
   
   if (hasModel_) {
-    replaceRenderableComponent(modelComp);
-    iscgApp_.replaceRenderableComponent(modelComp);
+    modelComp_->replaceHveModel(hveSurface);
   }
   else {
-    addRenderableComponent(modelComp);
-    iscgApp_.addRenderableComponent(modelComp);
+    modelComp_ = std::make_shared<hnll::ModelComponent>(getId(), std::move(hveSurface));
+    addRenderableComponent(modelComp_);
+    iscgApp_.addRenderableComponent(modelComp_);
     hasModel_ = true;
   }
 }
