@@ -25,7 +25,7 @@ void BezierCurve::recreateCurve()
 
   auto headPos = head_->getTranslation(), tailPos = tail_->getTranslation();
   positions_[0] = headPos;
-  // TODO : implement for general bezier
+  // TODO : implement
   // equally sampling
   for (float i = 1; i < positions_.size(); i++) {
     float t = i * (1.f / (positions_.size() - 1));

@@ -49,4 +49,10 @@ void IscgApp::updateGame(float dt)
   coonsSurface_->updateSurface();
 }
 
+void IscgApp::updateGameImgui()
+{
+  ImGui::SliderInt("controll point count", &BezierCurve::getControllPointCountRef(), 3, 5);
+  ImGui::SliderInt("dividing count", &BezierCurve::getDividingCountRef(), 1, 20);
+}
+
 } // namespace iscg

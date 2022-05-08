@@ -64,11 +64,10 @@ void CoonsSurface::updateSurface()
 
   if (controllPointCountCache_ != BezierCurve::getControllPointCount()) {
     recreateMidControllPoints();
+    recreateSurfaceMesh();
   }
 
-  if (dragManager_->isChanged()) 
-    recreateSurfaceMesh();
-  if (dividingCountCache_ != BezierCurve::getDividingCount())
+  else if (dragManager_->isChanged() || dividingCountCache_ != BezierCurve::getDividingCount()) 
     recreateSurfaceMesh();
 }
 
@@ -79,8 +78,14 @@ void CoonsSurface::recreateMidControllPoints()
   // bezier curve loop
   for (int i = 0; i < 4; i++) {
     // create from scratch
+    // clear point light
+    for (auto &point : bezierCurves_[i]->getMidControllPointsRef()) {
+      iscgApp_.removePointLightWithoutOwner(point->lightComp()->getCompId());
+      dragManager_->removeDragComp(point->dragComp()->getCompId());
+    }
     bezierCurves_[i]->clearMidControllPoint();
-    auto head2tail = basePoints_[(i + 1) % controllPointCount]->getTranslation() - basePoints_[i]->getTranslation();
+
+    auto head2tail = basePoints_[(i + 1) % basePoints_.size()]->getTranslation() - basePoints_[i]->getTranslation();
     // mid-controll point loop
     for (int j = 1; j < controllPointCount - 1; j++) {
       // calc vec the head to the new

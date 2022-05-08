@@ -40,7 +40,11 @@ class BezierCurve : public hnll::HgeActor
     // getter
     static int getControllPointCount() { return controllPointCount_; }
     static int getDividingCount() { return dividingCount_; }
+    // to bind to imgui
+    static int& getControllPointCountRef() { return controllPointCount_; }
+    static int& getDividingCountRef() { return dividingCount_; }
     std::vector<glm::vec3>& getLinePointPositions() { return positions_; }
+    std::vector<s_ptr<ControllPoint>>& getMidControllPointsRef() { return midControllPoints_; }
 
   private:
     void updateActor(float dt) override {}

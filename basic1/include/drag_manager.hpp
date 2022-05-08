@@ -27,6 +27,8 @@ class DragManager : public hnll::HgeActor
       hnll::HgeComponent::compId id = spDragComp->getCompId();
       dragCompMap_.emplace(id, std::forward<SP>(spDragComp)); 
     }
+    void removeDragComp(hnll::HgeComponent::compId id)
+    { dragCompMap_.erase(id); }
 
     inline bool isChanged() const { return isChanged_; }
 

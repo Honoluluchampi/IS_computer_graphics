@@ -21,6 +21,7 @@ class IscgApp : public hnll::HgeGame
     
   private:
     void updateGame(float dt) override;
+    void updateGameImgui() override;
     void createActor() override;   
 
     u_ptr<CoonsSurface> coonsSurface_;
