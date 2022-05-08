@@ -18,29 +18,44 @@ BezierCurve::BezierCurve(s_ptr<ControllPoint>& head, s_ptr<ControllPoint>& tail)
 {
 }
 
-// TODO : use cache of unchaged curve
+int combination(int n, int c)
+{
+  c = std::min(c, n - c);
+  int res = 1;
+  for (int i = 0; i < c; i++) {
+    res *= n - i;
+    res /= i + 1;
+  }
+  return res;
+}
+
 void BezierCurve::recreateCurve()
 {
   positions_.resize((dividingCount_ + 1) * (controllPointCount_ - 1) + 1);
 
   auto headPos = head_->getTranslation(), tailPos = tail_->getTranslation();
   positions_[0] = headPos;
-  // TODO : implement
   // equally sampling
   for (float i = 1; i < positions_.size(); i++) {
     float t = i * (1.f / (positions_.size() - 1));
     auto ti = 1.f - t;
     
-    auto trib1 = headPos;
-    trib1 *= std::pow(ti, 3);
-    auto trib2 = midControllPoints_[0]->getTranslation();
-    trib2 *= 3 * t * std::pow(ti, 2);
-    auto trib3 = midControllPoints_[1]->getTranslation();
-    trib3 *= 3 * std::pow(t, 2) * ti;
-    auto trib4 = tailPos;
-    trib4 *= std::pow(t, 3);
-
-    positions_[i] = trib1 + trib2 + trib3 + trib4;
+    glm::vec3 tribs[controllPointCount_];
+    // fill tribs
+    tribs[0] = head_->getTranslation();
+    tribs[controllPointCount_-1] = tail_->getTranslation();
+    for (int j = 1; j < controllPointCount_ - 1; j++) {
+      tribs[j] = midControllPoints_[j-1]->getTranslation();
+    }
+    // calc coeffecient of each tribs
+    for (int j = 0; j < controllPointCount_; j++) {
+      tribs[j] *= combination(controllPointCount_ - 1, j) * std::pow(t, j) * std::pow(ti, controllPointCount_ - 1 - j);
+    }
+    // write answer
+    positions_[i] = glm::vec3{0.f, 0.f, 0.f};
+    for (const auto& trib : tribs) {
+      positions_[i] += trib;
+    } 
   }
 }
 
