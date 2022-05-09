@@ -4,6 +4,10 @@
 // hge
 #include <hge_components/point_light_component.hpp>
 
+// TODO : delete
+// hve
+#include <systems/line_rendering_system.hpp>
+
 namespace iscg {
 
 IscgApp::IscgApp() : HgeGame("coons surface")
@@ -47,12 +51,23 @@ void IscgApp::createActor()
 void IscgApp::updateGame(float dt)
 {
   coonsSurface_->updateSurface();
+  if (!hideControllPointsCache_ && hideControllPoints_) {
+    coonsSurface_->changeControllPointsRadius(0);
+    hideControllPointsCache_ = true;
+  }
+  else if (hideControllPointsCache_ && !hideControllPoints_) {
+    coonsSurface_->changeControllPointsRadius();
+    hideControllPointsCache_ = false;
+  }
 }
 
 void IscgApp::updateGameImgui()
 {
-  ImGui::SliderInt("controll point count", &BezierCurve::getControllPointCountRef(), 3, 5);
+  ImGui::SliderInt("controll points count", &BezierCurve::getControllPointCountRef(), 3, 5);
   ImGui::SliderInt("dividing count", &BezierCurve::getDividingCountRef(), 1, 20);
+  // TODO : delete
+  ImGui::SliderInt("interpolating points count", &hnll::LineRenderingSystem::interpolatingPointsCount, 0, 7);
+  ImGui::Checkbox("hide controll points", &hideControllPoints_);
 }
 
 } // namespace iscg

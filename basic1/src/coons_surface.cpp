@@ -53,7 +53,7 @@ CoonsSurface::CoonsSurface(IscgApp& iscgApp) : HgeActor(), iscgApp_(iscgApp)
 
   // create each mid points and move them to bezier curve
   recreateMidControllPoints();
-
+  recreateControllLines();
   // first mesh
   recreateSurfaceMesh();
 }
@@ -64,6 +64,7 @@ void CoonsSurface::updateSurface()
 
   if (controllPointCountCache_ != BezierCurve::getControllPointCount()) {
     recreateMidControllPoints();
+    recreateControllLines();
     recreateSurfaceMesh();
   }
 
@@ -217,6 +218,34 @@ void CoonsSurface::recreateSurfaceMesh()
     iscgApp_.addRenderableComponent(modelComp_);
     hasModel_ = true;
   }
+}
+
+void CoonsSurface::recreateControllLines()
+{
+  // bezier curve loop
+  for (int bez = 0; bez < 4; bez++) {
+    // clear existing controll lines
+    for (auto& line : bezierCurves_[bez]->getControllLinesRef()) {
+      iscgApp_.removeRenderableComponent(line->getRenderType(), line->getCompId()); 
+    }
+    bezierCurves_[bez]->clearControllLine();
+
+    // create line
+    bezierCurves_[bez]->recreateControllLine(iscgApp_, lineColor_, lineRadius_);
+  }
+
+}
+
+void CoonsSurface::changeControllPointsRadius(float radius)
+{
+  if (radius == -1) radius = pointRadius_;
+  // basepoint
+  for (auto &basePoint : basePoints_)
+    basePoint->lightComp()->setRadius(radius);
+  // mid point
+  for (auto &bezier : bezierCurves_)
+    for (auto & point :bezier->getMidControllPointsRef())
+      point->lightComp()->setRadius(radius);
 }
 
 } // namespace iscg

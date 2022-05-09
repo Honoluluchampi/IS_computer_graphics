@@ -25,6 +25,8 @@ class IscgApp : public hnll::HgeGame
     void createActor() override;   
 
     u_ptr<CoonsSurface> coonsSurface_;
+    bool hideControllPoints_ = false;
+    bool hideControllPointsCache_ = false;
 };
 
 } // namespace iscg

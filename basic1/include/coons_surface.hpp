@@ -12,9 +12,6 @@
 
 namespace iscg {
 
-// forward declaration
-class IscgApp;
-
 class CoonsSurface : hnll::HgeActor
 {
   public:
@@ -22,9 +19,13 @@ class CoonsSurface : hnll::HgeActor
 
     void updateSurface();
 
+    // -1 indicates default size
+    void changeControllPointsRadius(float radius = -1);
+
   private:  
     // create each mid points and move them to bezier curve
     void recreateMidControllPoints();
+    void recreateControllLines();
     void addControllPoint(s_ptr<ControllPoint>& controllPoint);
     void recreateSurfaceMesh();
 
@@ -40,7 +41,10 @@ class CoonsSurface : hnll::HgeActor
     // point param
     glm::vec3 pointColor_ = {1.f, .1f, .1f};
     float pointRadius_ = 0.2f;
-
+    // line param
+    glm::vec3 lineColor_ = {.9f, .2f, .2f};
+    float lineRadius_ = 0.05f;
+    // surface param
     glm::vec3 surfaceColor_ = {1.f, 1.f, 1.f};
 
     s_ptr<hnll::ModelComponent> modelComp_;

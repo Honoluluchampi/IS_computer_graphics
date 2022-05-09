@@ -1,4 +1,5 @@
 #include <bezier_curve.hpp>
+#include <iscg_app.hpp>
 
 namespace iscg {
 
@@ -57,6 +58,44 @@ void BezierCurve::recreateCurve()
       positions_[i] += trib;
     } 
   }
+}
+
+void BezierCurve::recreateControllLine(IscgApp& app, glm::vec3& color, float radius)
+{
+  // first segment
+  auto line = std::make_shared<hnll::LineComponent>(
+    getId(),
+    head_->getTranslation(),
+    midControllPoints_[0]->getTranslation(),
+    color, 
+    radius
+  );
+  app.addRenderableComponent(line);
+  controllLines_.push_back(std::move(line));
+
+  // mid segments
+  for (int i = 0; i < controllPointCount_ - 3; i++) {
+    line = std::make_shared<hnll::LineComponent>(
+      getId(),
+      midControllPoints_[i]->getTranslation(),
+      midControllPoints_[i + 1]->getTranslation(),
+      color,
+      radius
+    );
+    app.addRenderableComponent(line);
+    controllLines_.push_back(std::move(line));
+  }
+  
+  // last segment
+  line = std::make_shared<hnll::LineComponent>(
+    getId(),
+    midControllPoints_[controllPointCount_ - 3]->getTranslation(),
+    tail_->getTranslation(),
+    color, 
+    radius
+  );
+  app.addRenderableComponent(line);
+  controllLines_.push_back(std::move(line));
 }
 
 } // namespace iscg
