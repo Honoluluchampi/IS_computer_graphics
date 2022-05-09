@@ -18,6 +18,8 @@ class IscgApp : public hnll::HgeGame
     // getter
     GLFWwindow* getGlfwWindow() const { return glfwWindow_m; }
     hnll::HgeCamera& getCamera() { return *upCamera_m; }
+
+    bool hideControllPoints() const { return hideControllPoints_; }
     
   private:
     void updateGame(float dt) override;

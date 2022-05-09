@@ -98,6 +98,7 @@ void CoonsSurface::recreateMidControllPoints()
       // add to bezier
       bezierCurves_[i]->addMidControllPoint(controllPoint);
     }
+    if (iscgApp_.hideControllPoints()) changeControllPointsRadius(0);
   } 
 
   // cache 
@@ -112,9 +113,7 @@ void CoonsSurface::addControllPoint(s_ptr<ControllPoint>& controllPoint)
 
 glm::vec3 sclXvec(const float& scalar, const glm::vec3& vec)
 {
-  glm::vec3 res = vec;
-  res *= scalar;
-  return res;
+  return {vec.x * scalar, vec.y * scalar, vec.z * scalar}; 
 }
 
 void CoonsSurface::recreateSurfaceMesh()
@@ -153,8 +152,8 @@ void CoonsSurface::recreateSurfaceMesh()
   std::unordered_map<hnll::HveModel::Vertex, uint32_t, std::Hash> uniqueVertices{};
 
   // TODO : parallelize
-  for (int i = 1; i < linePointCount; i++) {
-    for (int j = 1; j < linePointCount; j++) {
+  for (int i = 1; i < linePointCount - 1; i++) {
+    for (int j = 1; j < linePointCount - 1; j++) {
       // calc new point pos
       float t = (float)i / (float)(linePointCount - 1);
       float s = (float)j / (float)(linePointCount - 1);
@@ -163,8 +162,12 @@ void CoonsSurface::recreateSurfaceMesh()
       glm::vec3 ld = sclXvec(si, positions[i][0]) + sclXvec(s, positions[i][linePointCount - 1]);
       glm::vec3 b = sclXvec(si * ti, positions[0][0]) + sclXvec(s * ti, positions[0][linePointCount - 1])
         + sclXvec(si * t, positions[linePointCount - 1][0]) + sclXvec(s * t, positions[linePointCount - 1][linePointCount - 1]);
-      positions[i][j] = lc + ld + b;
-      positions[i][j] /= 3.f;
+      positions[i][j] = lc + ld - b;
+    }
+  }
+
+  for (int i = 1; i < linePointCount; i++) {
+    for (int j = 1; j < linePointCount; j++) {
       // register two triangle to buffer
       // upper triangle
       glm::vec3 normal = glm::cross(positions[i][j-1] - positions[i-1][j-1], positions[i-1][j] - positions[i-1][j-1]); 
@@ -202,7 +205,6 @@ void CoonsSurface::recreateSurfaceMesh()
         builder.indices_m.push_back(uniqueVertices[vert]);
       }
     }
-
     dividingCountCache_ = BezierCurve::getDividingCount();
   }
 
