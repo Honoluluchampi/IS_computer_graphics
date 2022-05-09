@@ -233,7 +233,6 @@ void CoonsSurface::recreateControllLines()
     // create line
     bezierCurves_[bez]->recreateControllLine(iscgApp_, lineColor_, lineRadius_);
   }
-
 }
 
 void CoonsSurface::changeControllPointsRadius(float radius)
