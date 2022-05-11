@@ -25,9 +25,13 @@ class CoonsSurface : hnll::HgeActor
   private:  
     // create each mid points and move them to bezier curve
     void recreateMidControllPoints();
+    void recreateCentroid();
     void recreateControllLines();
     void addControllPoint(s_ptr<ControllPoint>& controllPoint);
     void recreateSurfaceMesh();
+
+    // to identify centroid drag
+    static void dragCallback(bool isChanged);
 
     IscgApp& iscgApp_;
     u_ptr<DragManager> dragManager_;
@@ -35,11 +39,14 @@ class CoonsSurface : hnll::HgeActor
     std::vector<u_ptr<BezierCurve>> bezierCurves_;
     std::vector<s_ptr<ControllPoint>> basePoints_;
 
+    u_ptr<ControllPoint> centroid_;
+
     // to check wheather those param was changed
     int controllPointCountCache_ = -1;
     int dividingCountCache_ = -1;
     // point param
     glm::vec3 pointColor_ = {1.f, .1f, .1f};
+    glm::vec3 centroidColor_ = {.1f, 1.f, .1f};
     float pointRadius_ = 0.2f;
     // line param
     glm::vec3 lineColor_ = {.9f, .2f, .2f};

@@ -16,6 +16,9 @@ class ControllPoint : public hnll::HgeActor
 {
   public:
     ControllPoint(const glm::vec3& position = {0.f, 0.f, 0.f}, const glm::vec3& color = {.1f, 1.f, 1.f}, float radius = 0.05);
+    // for creating centroid (create base points first)
+    // takes CoonsSurface::basePoints_
+    ControllPoint(const std::vector<s_ptr<ControllPoint>>& basePoints, const glm::vec3& color, float radius);
     
     // getter
     s_ptr<DraggableComponent>& dragComp() { return dragComp_; }
@@ -26,6 +29,7 @@ class ControllPoint : public hnll::HgeActor
   private:
     s_ptr<DraggableComponent> dragComp_;
     s_ptr<hnll::PointLightComponent> lightComp_;
+    bool isCentroid_ = false;
 };
 
 class BezierCurve : public hnll::HgeActor

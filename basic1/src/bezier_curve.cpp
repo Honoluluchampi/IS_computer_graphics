@@ -10,6 +10,20 @@ ControllPoint::ControllPoint(const glm::vec3& position, const glm::vec3& color, 
   dragComp_ = std::make_shared<DraggableComponent>(lightComp_->getTransform(), radius);
 }
 
+ControllPoint::ControllPoint(const std::vector<s_ptr<ControllPoint>>& basePoints, const glm::vec3& color, float radius)
+  : HgeActor()
+{
+  isCentroid_ = true;
+  lightComp_ = hnll::PointLightComponent::createPointLight(this->getId(), 0.0f, radius, color);
+  // calc centroid position
+  glm::vec3 pos;
+  for (const auto& point : basePoints) 
+    pos += point->lightComp()->getTransform().translation_m;
+  pos /= basePoints.size();
+  lightComp_->getTransform().translation_m = pos;
+  dragComp_ = std::make_shared<DraggableComponent>(lightComp_->getTransform(), radius);
+}
+
 int BezierCurve::controllPointCount_ = 4;
 int BezierCurve::dividingCount_ = 15;
 

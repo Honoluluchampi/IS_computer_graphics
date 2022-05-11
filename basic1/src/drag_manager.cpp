@@ -22,9 +22,9 @@ void DragManager::mouseButtonCallback(GLFWwindow* window, int button, int action
   ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
   
   // iscg
-  if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+  if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
     isDragging_ = true;
-  else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
+  else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
     isDragging_ = false;
     isBinded_ = false;
   }
@@ -106,6 +106,7 @@ void DragManager::calcCursorProjectionIntersect()
       dragCompMap_[bindedCompId_]->getTransform().translation_m = 
         camera_.getTransform().translation_m + projVec;
       isChanged_ = true;
+      dragCompMap_[bindedCompId_]->
     }
   }
 }

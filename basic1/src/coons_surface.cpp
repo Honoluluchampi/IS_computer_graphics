@@ -53,6 +53,7 @@ CoonsSurface::CoonsSurface(IscgApp& iscgApp) : HgeActor(), iscgApp_(iscgApp)
 
   // create each mid points and move them to bezier curve
   recreateMidControllPoints();
+  recreateCentroid();
   recreateControllLines();
   // first mesh
   recreateSurfaceMesh();
@@ -103,6 +104,12 @@ void CoonsSurface::recreateMidControllPoints()
 
   // cache 
   controllPointCountCache_ = BezierCurve::getControllPointCount();
+}
+
+// call after basepoint creation
+void CoonsSurface::recreateCentroid()
+{
+  centroid_ = std::make_unique<ControllPoint>(basePoints_, centroidColor_, pointRadius_);
 }
 
 void CoonsSurface::addControllPoint(s_ptr<ControllPoint>& controllPoint)
