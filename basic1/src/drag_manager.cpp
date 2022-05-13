@@ -106,8 +106,7 @@ void DragManager::calcCursorProjectionIntersect()
       dragCompMap_[bindedCompId_]->getTransform().translation_m = 
         camera_.getTransform().translation_m + projVec;
       isChanged_ = true;
-      dragCompMap_[bindedCompId_]->
-    }
+    } 
   }
 }
 
