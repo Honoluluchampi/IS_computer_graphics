@@ -5,7 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 
-int main() 
+int main()  
 {
   iscg::IscgApp app;
 
@@ -18,4 +18,4 @@ int main()
   }
 
   return EXIT_SUCCESS;
-}
+} 

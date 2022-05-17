@@ -69,7 +69,7 @@ void BezierCurve::recreateCurve()
     // write answer
     positions_[i] = glm::vec3{0.f, 0.f, 0.f};
     for (const auto& trib : tribs) {
-      positions_[i] += trib;
+      positions_[i] += trib; 
     } 
   }
 }

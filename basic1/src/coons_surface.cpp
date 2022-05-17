@@ -1,6 +1,9 @@
 #include <coons_surface.hpp>
 #include <iscg_app.hpp>
 
+// hve
+#include <utility.hpp>
+
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/hash.hpp>
 
@@ -108,7 +111,7 @@ void CoonsSurface::recreateMidControllPoints()
 
 // call after basepoint creation
 void CoonsSurface::recreateCentroid()
-{
+{ 
   centroid_ = std::make_unique<ControllPoint>(basePoints_, centroidColor_, pointRadius_);
 }
 
@@ -116,11 +119,6 @@ void CoonsSurface::addControllPoint(s_ptr<ControllPoint>& controllPoint)
 {
   iscgApp_.addPointLightWithoutOwner(controllPoint->lightComp());
   dragManager_->addDragComps(controllPoint->dragComp());
-}
-
-glm::vec3 sclXvec(const float& scalar, const glm::vec3& vec)
-{
-  return {vec.x * scalar, vec.y * scalar, vec.z * scalar}; 
 }
 
 void CoonsSurface::recreateSurfaceMesh()
