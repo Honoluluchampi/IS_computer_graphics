@@ -1,5 +1,8 @@
 #include <drag_manager.hpp>
 
+// hge
+#include <hge_game.hpp>
+
 // lib
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
@@ -12,22 +15,24 @@ bool DragManager::isBinded_ = false;
 DragManager::DragManager(GLFWwindow* window, hnll::HgeCamera& camera) 
   : window_(window), camera_(camera)
 {
-  // set mouse button call-back
-  glfwSetMouseButtonCallback(window_, mouseButtonCallback);
+  setGlfwMouseButtonCallback();
 }
 
-void DragManager::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+void DragManager::setGlfwMouseButtonCallback()
 {
-  // imgui
-  ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
-  
-  // iscg
-  if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-    isDragging_ = true;
-  else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-    isDragging_ = false;
-    isBinded_ = false;
-  }
+  auto func = [](GLFWwindow* window, int button, int action, int mods)
+  {
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+      isDragging_ = true;
+    else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+      isDragging_ = false;
+      isBinded_ = false;
+    }
+  };
+
+  hnll::HgeGame::addGlfwMouseButtonCallback(
+    std::make_unique<std::function<void(GLFWwindow*, int, int ,int)>>(func)
+  );
 }
 
 void DragManager::updateActor(float dt)
