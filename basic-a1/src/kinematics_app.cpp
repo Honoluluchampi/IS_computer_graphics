@@ -57,7 +57,7 @@ void ktApp::updateGame(float dt)
 void ktApp::computeIk()
 {
   for(auto i = bones_.rbegin(), e = bones_.rend(); i != e; ++i) {
-
+    (*i)->updateIk(controllPoint_->getTranslation(), wholeHead_->head());
   }
 }
 
