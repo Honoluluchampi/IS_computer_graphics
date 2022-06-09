@@ -2,8 +2,21 @@
 
 namespace iscg {
 
-ktApp::ktApp()
+ktApp::ktApp() : HgeGame("inward kinematics")
 {
+  // init camera transform
+  Transform transform{};
+  transform.translation_m = {0.f, 0.f, -10.f};
+  setCameraTransform(transform);
+
+  // init drag manager
+  dragManager_ = std::make_unique<DragManager>(glfwWindow_m, *upCamera_m);
+
+  // init drag point
+  controllPoint_ = std::make_shared<ControllPoint>(glm::vec3{0.f, -5.f, 0.f}, controllPointColor_, controllPointRadius_);
+  addPointLightWithoutOwner(controllPoint_->lightComp());
+  dragManager_->addDragComps(controllPoint_->dragComp());
+
   auto lightActor = createActor();
   auto lightComp = hnll::PointLightComponent::createPointLight(lightActor->getId(), 10.f, 0.f, {1.f, 1.f, 1.f});
   lightComp->setTranslation(glm::vec3(0.f, -10.f, 0.f));
@@ -27,7 +40,14 @@ s_ptr<Bone> ktApp::createBone()
 
 void ktApp::updateGame(float dt)
 {
-  computeIk();
+  dragManager_->update(0.f);
+}
+
+void ktApp::computeIk()
+{
+  for(auto i = bones_.rbegin(), e = bones_.rend(); i != e; ++i) {
+
+  }
 }
 
 void ktApp::updateGameImgui()

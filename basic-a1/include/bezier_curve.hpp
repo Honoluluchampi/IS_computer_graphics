@@ -3,14 +3,12 @@
 #include <draggable_component.hpp>
 
 // hge
+#include <hge_game.hpp>
 #include <hge_actor.hpp>
 #include <hge_components/point_light_component.hpp>
 #include <hge_components/line_component.hpp>
 
 namespace iscg {
-
-// forward declaration
-class IscgApp;
 
 class ControllPoint : public hnll::HgeActor
 {
@@ -41,7 +39,7 @@ class BezierCurve : public hnll::HgeActor
     template<class CP>
     void addMidControllPoint(CP&& cp)
     { midControllPoints_.emplace_back(std::forward<CP>(cp)); }
-    void recreateControllLine(IscgApp& app, glm::vec3& color, float radius);
+    void recreateControllLine(hnll::HgeGame& app, glm::vec3& color, float radius);
 
     void clearMidControllPoint() { midControllPoints_.clear(); }
     void clearControllLine() { controllLines_.clear(); }

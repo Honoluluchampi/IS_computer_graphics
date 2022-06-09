@@ -38,7 +38,7 @@ void IscgApp::loadActor()
   };
   // create light
   for (int i = 0; i < 4; i++) {
-    auto light = std::make_unique<hnll::HgeActor>();
+    auto light = createActor();
     auto lightComp = hnll::PointLightComponent::createPointLight
       (light->getId(), 100.f, 0.f, color[i]);
     lightComp->setTranslation(position[i]);

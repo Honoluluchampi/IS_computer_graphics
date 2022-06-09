@@ -13,7 +13,8 @@ target_include_directories(app PUBLIC
   $ENV{HIE_DIR}/include 
   $ENV{HGE_DIR}/include
   ~/programs/external_libraries/imgui
-  ${CMAKE_CURRENT_SOURCE_DIR}/include)
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
 target_link_directories(app PUBLIC 
   $ENV{HNLL_ENGN}/lib

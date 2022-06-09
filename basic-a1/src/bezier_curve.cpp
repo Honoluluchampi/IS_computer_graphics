@@ -1,5 +1,4 @@
 #include <bezier_curve.hpp>
-#include <iscg_app.hpp>
 
 namespace iscg {
 
@@ -74,7 +73,7 @@ void BezierCurve::recreateCurve()
   }
 }
 
-void BezierCurve::recreateControllLine(IscgApp& app, glm::vec3& color, float radius)
+void BezierCurve::recreateControllLine(hnll::HgeGame& app, glm::vec3& color, float radius)
 {
   // first segment
   auto line = std::make_shared<hnll::LineComponent>(

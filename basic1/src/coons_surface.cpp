@@ -220,7 +220,7 @@ void CoonsSurface::recreateSurfaceMesh()
     modelComp_->replaceHveModel(hveSurface);
   }
   else {
-    modelComp_ = std::make_shared<hnll::ModelComponent>(getId(), std::move(hveSurface));
+    modelComp_ = std::make_shared<hnll::MeshComponent>(getId(), std::move(hveSurface));
     addRenderableComponent(modelComp_);
     iscgApp_.addRenderableComponent(modelComp_);
     hasModel_ = true;
