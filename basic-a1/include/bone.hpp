@@ -3,7 +3,7 @@
 // hge
 #include <hge_actor.hpp>
 #include <utility.hpp>
-#include <hge_components/model_component.hpp>
+#include <hge_components/mesh_component.hpp>
 
 // std
 #include <memory>
@@ -28,7 +28,7 @@ private:
   float length_ = 3.0f;
   // take care to only accept rigit transform
   u_ptr<Transform> rigidTransform_{};
-  u_ptr<hnll::ModelComponent> boneModel_;
+  u_ptr<hnll::MeshComponent> boneModel_;
 };
 
 } // namespace iscg

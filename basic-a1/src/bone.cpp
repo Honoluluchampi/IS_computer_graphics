@@ -4,7 +4,7 @@ namespace iscg {
 
 Bone::Bone() : HgeActor()
 {
-
+  // register bone mesh
 }
 
 void Bone::updateTransform(const Transform& transform = {}) 

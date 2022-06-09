@@ -8,7 +8,7 @@
 
 // hge
 #include <hge_actor.hpp>
-#include <hge_components/model_component.hpp>
+#include <hge_components/mesh_component.hpp>
 
 namespace iscg {
 
@@ -54,7 +54,7 @@ class CoonsSurface : hnll::HgeActor
     // surface param
     glm::vec3 surfaceColor_ = {1.f, 1.f, 1.f};
 
-    s_ptr<hnll::ModelComponent> modelComp_;
+    s_ptr<hnll::MeshComponent> modelComp_;
     bool hasModel_ = false;
 };
 

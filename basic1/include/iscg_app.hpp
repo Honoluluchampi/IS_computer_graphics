@@ -24,7 +24,7 @@ class IscgApp : public hnll::HgeGame
   private:
     void updateGame(float dt) override;
     void updateGameImgui() override;
-    void createActor() override;   
+    void loadActor() override;   
 
     u_ptr<CoonsSurface> coonsSurface_;
     bool hideControllPoints_ = false;

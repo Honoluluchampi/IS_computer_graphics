@@ -18,10 +18,10 @@ IscgApp::IscgApp() : HgeGame("coons surface")
   transform.rotation_m = {glm::radians(-45.f), 0.f, 0.f};
   setCameraTransform(transform);
 
-  createActor();
+  loadActor();
 }
 
-void IscgApp::createActor()
+void IscgApp::loadActor()
 {
   glm::vec3 position[4] = {
     {5.f, -5.f, 5.f},
