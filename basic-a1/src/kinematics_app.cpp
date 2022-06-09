@@ -13,7 +13,7 @@ ktApp::ktApp() : HgeGame("inward kinematics")
   dragManager_ = std::make_unique<DragManager>(glfwWindow_m, *upCamera_m);
 
   // init drag point
-  controllPoint_ = std::make_shared<ControllPoint>(glm::vec3{0.f, -5.f, 0.f}, controllPointColor_, controllPointRadius_);
+  controllPoint_ = std::make_shared<ControllPoint>(glm::vec3{0.f, 0.f, 0.f}, controllPointColor_, controllPointRadius_);
   addPointLightWithoutOwner(controllPoint_->lightComp());
   dragManager_->addDragComps(controllPoint_->dragComp());
 
@@ -23,17 +23,21 @@ ktApp::ktApp() : HgeGame("inward kinematics")
   addPointLight(lightActor, lightComp);
   // root
   bones_.emplace_back(createBone());
+  wholeTail_ = bones_[0];
   // first
-  bones_.emplace_back(createBone());
-  bones_[1]->getRenderableComponent()->setTranslation(glm::vec3(0.f, 2.f, 0.f));
+  bones_.emplace_back(createBone(bones_[0]));
+  wholeHead_ = bones_[1];
 }
 
-s_ptr<Bone> ktApp::createBone()
+s_ptr<Bone> ktApp::createBone(s_ptr<Bone> parent)
 {
-  auto bone = hnll::HgeGame::createActor<Bone>();
+  auto bone = hnll::HgeGame::createActor<Bone>(parent);
   auto boneModel = getHveModel("bone");
   auto boneModelComp = std::make_shared<hnll::MeshComponent>(bone->getId(), boneModel);
   bone->addRenderableComponent(boneModelComp);
+
+  if (parent)
+    bone->alignToParent();
 
   return bone;
 }
@@ -41,6 +45,13 @@ s_ptr<Bone> ktApp::createBone()
 void ktApp::updateGame(float dt)
 {
   dragManager_->update(0.f);
+
+  static bool changedCache = false;
+  if (dragManager_->isChanged()) changedCache = true;
+  if (bindToControllPoint_ && changedCache) {
+    computeIk();
+    changedCache = false;
+  }
 }
 
 void ktApp::computeIk()
@@ -52,7 +63,32 @@ void ktApp::computeIk()
 
 void ktApp::updateGameImgui()
 {
-  ImGui::Button("create bone");
+  ImGui::Begin("config");
+
+  if (ImGui::Button("create bone")) {
+    addBone();
+  }
+  if (ImGui::Button("delete bone")) {
+    // deleteBone();
+  }
+  ImGui::Checkbox("bind to controll point", &bindToControllPoint_);
+
+  ImGui::End();
+}
+
+void ktApp::addBone()
+{
+
+}
+
+void ktApp::deleteBone()
+{
+  if (bones_.size() == 1)
+    std::cout << "cannot delete root!" << std::endl;
+  else {
+    bones_[bones_.size() - 1]->setActorState(hnll::HgeActor::state::DEAD);
+    bones_.erase(bones_.end() - 1);
+  }
 }
 
 } // namespace iscg

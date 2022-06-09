@@ -16,10 +16,27 @@ template<class T> using u_ptr = std::unique_ptr<T>;
 
 class Bone : public hnll::HgeActor
 {
+  constexpr static float BONE_LENGTH = 2.f;
+
 public:
-  Bone();
+  Bone(s_ptr<Bone> parent = nullptr) : HgeActor(), parent_(parent)
+  {}
   bool isRoot() const { return parent_ == nullptr; }
   void updateTransform(const Transform& transform);
+  glm::vec3 head()
+  { 
+    auto transform = getRenderableComponent()->getTransform();
+    glm::vec3 diff = BONE_LENGTH * transform.mat4() * glm::vec4(0.f, 1.f, 0.f, 0.f);
+    return transform.translation_m + diff;
+  }
+  glm::vec3 tail()
+  { return getRenderableComponent()->getTransform().translation_m; }
+
+  void alignToParent()
+  {
+    getRenderableComponent()->setTranslation(parent_->head());
+    getRenderableComponent()->setRotation(parent_->getRenderableComponent()->getTransform().rotation_m);
+  }
 
 private:
   s_ptr<Bone> parent_ = nullptr;
