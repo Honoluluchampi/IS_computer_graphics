@@ -78,7 +78,8 @@ void ktApp::updateGameImgui()
 
 void ktApp::addBone()
 {
-
+  bones_.emplace_back(createBone(*(--bones_.end())));
+  wholeHead_ = *(--bones_.end());
 }
 
 void ktApp::deleteBone()
